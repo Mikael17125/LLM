@@ -101,7 +101,7 @@ def main():
 
     save_step = 500
 
-    train(model, 
+    train(model,
           train_loader, 
           val_loader, 
           optimizer, 

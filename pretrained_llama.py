@@ -10,7 +10,7 @@ from transformers import LlamaModel, LlamaConfig
 from models.llama import Llama
 
 # Configuration
-configuration = LlamaConfig(
+config = LlamaConfig(
     vocab_size=50257,  # Adjust based on tokenizer
     hidden_size=512,  # Default size for Llama
     num_attention_heads=4,  # Default for Llama
@@ -47,10 +47,8 @@ def main():
     num_epochs = 1
 
     tokenizer = tiktoken.get_encoding("gpt2")
-    base_model = LlamaModel(configuration)
 
-    model = Llama(base_model)
-    
+    model = Llama(config)
     model = model.to(device)
     model = torch.nn.parallel.DistributedDataParallel(model, 
                                                       device_ids=[local_rank])
@@ -71,8 +69,8 @@ def main():
         train_data,
         batch_size=128,
         tokenizer=tokenizer,
-        max_length=configuration.max_position_embeddings,
-        stride=configuration.max_position_embeddings,
+        max_length=config.max_position_embeddings,
+        stride=config.max_position_embeddings,
         drop_last=True,
         num_workers=4,
     )
@@ -81,8 +79,8 @@ def main():
         val_data,
         batch_size=128,
         tokenizer=tokenizer,
-        max_length=configuration.max_position_embeddings,
-        stride=configuration.max_position_embeddings,
+        max_length=config.max_position_embeddings,
+        stride=config.max_position_embeddings,
         drop_last=False,
         num_workers=4,
         shuffle=False
